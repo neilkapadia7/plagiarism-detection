@@ -3,6 +3,10 @@
 A small, self-contained text comparison engine (`TextMatcher`) wrapped in an Express HTTP
 API. No external infrastructure required — everything runs locally.
 
+Request validation is handled by `express-validator`, all route handlers are wrapped in
+try/catch, and every response (success or error) is sent through a shared responder
+(`services/responder.js`) so the wire format stays consistent across the API.
+
 ## Install
 
 ```bash
