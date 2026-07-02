@@ -87,3 +87,12 @@ curl -s -X POST http://localhost:5000/compare \
 - A catch-all Express error-handling middleware in `server.js` guards against malformed
   JSON bodies or any unexpected thrown errors, always responding with a JSON error body
   instead of crashing the process.
+- **`services/responder.js`** centralizes how responses are sent (`success(res, data,
+  statusCode)` / `error(res, message, statusCode, extra)`), without changing the wire
+  shape — `success` still returns the raw `MatchResult`/`{ status: 'ok' }` body the spec
+  documents, and `error` still returns `{ error: message }`. Route handlers use it inside
+  try/catch blocks, and `server.js`'s error middleware uses it too, so every response
+  (success or failure) goes through one place.
+- **`express-validator`** validates `POST /compare`'s body (`source`/`candidate` must be
+  present and be strings) before the handler runs; the resulting message is passed to
+  `responder.error(res, message, 400)`.
